@@ -53,7 +53,7 @@ app.use(cors({
     }
   },
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization", "Origin"],
+  allowedHeaders: ["Content-Type", "Authorization", "Origin", "Access-Control-Allow-Origin"],
   credentials: true
 }));
 app.use(express.urlencoded({ extended: true }));
