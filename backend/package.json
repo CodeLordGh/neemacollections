@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node public/src/server.js",
+    "start": "node dist/src/server.js",
     "build": "tsc --build --verbose",
     "dev": "nodemon ./src/server.ts",
     "serve": "node dist/server.js"
