@@ -60,31 +60,12 @@ const app = (0, express_1.default)();
 const port = process.env.PORT || 3002;
 const server = http_1.default.createServer(app);
 app.use((0, morgan_1.default)('dev'));
-// Move this connection string to .env file
 const db_connect = `mongodb+srv://PerisNeemaCollection:${process.env.DB_PASSWORD}@neema.acaijrr.mongodb.net/?retryWrites=true&w=majority&appName=Neema`;
-const io = new socket_io_1.Server(server, {
-    cors: {
-        origin: "https://neemacollections.vercel.app/",
-        methods: ["GET", "POST", "DELETE"],
-        allowedHeaders: ["Content-Type", "Authorization"],
-    },
-});
+const io = new socket_io_1.Server(server);
 // Setup notification handlers
 (0, notification_1.setupNotificationHandlers)(io);
 app.use(express_1.default.json());
-app.use((0, cors_1.default)({
-    origin: (origin, callback) => {
-        if (origin === "https://neemacollections.vercel.app/") {
-            callback(null, origin);
-        }
-        else {
-            callback(new Error("Not allowed by CORS"));
-        }
-    },
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization", "Origin", "Access-Control-Allow-Origin"],
-    credentials: true
-}));
+app.use((0, cors_1.default)());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use((0, cookie_parser_1.default)());
 // app.use(session({
