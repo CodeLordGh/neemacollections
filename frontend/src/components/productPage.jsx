@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
-import axios from 'axios';
 import { setCurrentProduct, addToCart } from '../redux/slices';
 import { Star, ShoppingCart } from 'lucide-react';
 import { motion } from 'framer-motion';
+import api from './utils/api'
 
 const ProductPage = () => {
   const { id } = useParams();
@@ -22,7 +22,7 @@ const ProductPage = () => {
     const fetchProduct = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`http://localhost:3002/api/products/${id}`);
+        const response = await api.get(`/products/${id}`);
         setProduct(response.data);
         dispatch(setCurrentProduct(response.data));
         setLoading(false);
