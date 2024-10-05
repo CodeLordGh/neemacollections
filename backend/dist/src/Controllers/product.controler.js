@@ -64,28 +64,34 @@ exports.addProduct = addProduct;
 const updateProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { productId } = req.params;
     const updateData = req.body;
-    console.log('Updating product:', {
-        productId,
-        updateData,
-        bodyKeys: Object.keys(updateData)
-    });
     try {
+        // Check if productId is provided
         if (!productId) {
-            console.error('No productId provided');
             return res.status(400).json({ message: 'Product ID is required' });
         }
-        const product = yield product_model_1.Product.findById(productId);
-        console.log('Found product:', product);
-        if (!product) {
-            console.error(`No product found with ID ${productId}`);
+        // Find the existing product
+        const existingProduct = yield product_model_1.Product.findById(productId);
+        if (!existingProduct) {
             return res.status(404).json({ message: 'Product not found' });
         }
-        if ('active' in updateData) {
-            console.log(`Updating active state from ${product.active} to ${updateData.active}`);
-            product.active = updateData.active;
+        // If it's just toggling active status
+        if (Object.keys(updateData).length === 1 && 'active' in updateData) {
+            existingProduct.active = updateData.active;
+            const updatedProduct = yield existingProduct.save();
+            return res.json({
+                message: 'Product status updated successfully',
+                product: updatedProduct
+            });
         }
-        const updatedProduct = yield product.save();
-        console.log('Product updated successfully:', updatedProduct);
+        // For full updates, validate the entire product data
+        const validationError = (0, validation_1.validateProduct)(updateData);
+        if (validationError) {
+            return res.status(400).json({ message: validationError });
+        }
+        // Update all fields
+        Object.assign(existingProduct, updateData);
+        // Save the updated product
+        const updatedProduct = yield existingProduct.save();
         res.json({
             message: 'Product updated successfully',
             product: updatedProduct

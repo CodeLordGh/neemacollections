@@ -60,46 +60,52 @@ export const updateProduct = async (req: Request, res: Response) => {
     const { productId } = req.params;
     const updateData = req.body;
 
-    console.log('Updating product:', {
-        productId,
-        updateData,
-        bodyKeys: Object.keys(updateData)
-    });
-
     try {
+        // Check if productId is provided
         if (!productId) {
-            console.error('No productId provided');
             return res.status(400).json({ message: 'Product ID is required' });
         }
 
-        const product = await Product.findById(productId);
-        console.log('Found product:', product);
-        
-        if (!product) {
-            console.error(`No product found with ID ${productId}`);
+        // Find the existing product
+        const existingProduct = await Product.findById(productId);
+        if (!existingProduct) {
             return res.status(404).json({ message: 'Product not found' });
         }
 
-        if ('active' in updateData) {
-            console.log(`Updating active state from ${product.active} to ${updateData.active}`);
-            product.active = updateData.active;
+        // If it's just toggling active status
+        if (Object.keys(updateData).length === 1 && 'active' in updateData) {
+            existingProduct.active = updateData.active;
+            const updatedProduct = await existingProduct.save();
+            return res.json({
+                message: 'Product status updated successfully',
+                product: updatedProduct
+            });
         }
 
-        const updatedProduct = await product.save();
-        console.log('Product updated successfully:', updatedProduct);
-        
-        res.json({ 
-            message: 'Product updated successfully', 
-            product: updatedProduct 
+        // For full updates, validate the entire product data
+        const validationError = validateProduct(updateData);
+        if (validationError) {
+            return res.status(400).json({ message: validationError });
+        }
+
+        // Update all fields
+        Object.assign(existingProduct, updateData);
+
+        // Save the updated product
+        const updatedProduct = await existingProduct.save();
+
+        res.json({
+            message: 'Product updated successfully',
+            product: updatedProduct
         });
-    } catch (error:any) {
+    } catch (error: any) {
         console.error('Error updating product:', error);
-        res.status(500).json({ 
+        res.status(500).json({
             message: 'Error updating product',
             error: error.message
         });
     }
-}
+};
 
 export const deleteProduct = async (req: Request, res: Response) => {
     const { productId } = req.params;
