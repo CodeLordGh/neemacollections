@@ -30,13 +30,12 @@ const port = process.env.PORT || 3002;
 const server = http.createServer(app);
 app.use(morgan('dev'));
 
-// Move this connection string to .env file
 const db_connect = `mongodb+srv://PerisNeemaCollection:${process.env.DB_PASSWORD}@neema.acaijrr.mongodb.net/?retryWrites=true&w=majority&appName=Neema`
 const io = new Server(server, {
   cors: {
     origin: "https://neemacollections.vercel.app/",
     methods: ["GET", "POST", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    allowedHeaders: ["Content-Type", "Authorization","Origin", "Access-Control-Allow-Origin"],
   },
 });
 

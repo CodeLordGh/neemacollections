@@ -82,7 +82,7 @@ app.use((0, cors_1.default)({
         }
     },
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization", "Origin"],
+    allowedHeaders: ["Content-Type", "Authorization", "Origin", "Access-Control-Allow-Origin"],
     credentials: true
 }));
 app.use(express_1.default.urlencoded({ extended: true }));
