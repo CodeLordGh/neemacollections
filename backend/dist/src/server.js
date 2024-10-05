@@ -55,6 +55,7 @@ const mpesa_route_1 = require("./routes/mpesa.route");
 const notification_route_1 = __importDefault(require("./routes/notification.route"));
 const user_route_1 = __importDefault(require("./routes/user.route"));
 const notification_1 = require("./utils/notification");
+const express_session_1 = __importDefault(require("express-session"));
 dotenv.config();
 const app = (0, express_1.default)();
 const port = process.env.PORT || 3002;
@@ -68,16 +69,16 @@ app.use(express_1.default.json());
 app.use((0, cors_1.default)());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use((0, cookie_parser_1.default)());
-// app.use(session({
-//   secret: process.env.SESSION_SECRET as string || 'secret',
-//   resave: false,
-//   saveUninitialized: false,
-//   cookie: {
-//     secure: process.env.NODE_ENV === 'production',
-//     maxAge: 24 * 60 * 60 * 1000, // 24 hours
-//     httpOnly: true,
-//   }
-// }));
+app.use((0, express_session_1.default)({
+    secret: process.env.SESSION_SECRET || 'secret',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 24 * 60 * 60 * 1000, // 24 hours
+        httpOnly: true,
+    }
+}));
 app.use(auth_strategy_1.default.initialize());
 app.use(auth_strategy_1.default.session());
 // Error handling middleware

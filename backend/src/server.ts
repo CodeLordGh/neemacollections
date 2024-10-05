@@ -18,6 +18,7 @@ import { initMpesaRoutes } from "./routes/mpesa.route";
 import notificationRoutes from './routes/notification.route';
 import userRoutes from './routes/user.route';
 import { emitNotification, NotificationTypes, setupNotificationHandlers } from "./utils/notification";
+import session from "express-session";
 
 
 
@@ -41,16 +42,16 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// app.use(session({
-//   secret: process.env.SESSION_SECRET as string || 'secret',
-//   resave: false,
-//   saveUninitialized: false,
-//   cookie: {
-//     secure: process.env.NODE_ENV === 'production',
-//     maxAge: 24 * 60 * 60 * 1000, // 24 hours
-//     httpOnly: true,
-//   }
-// }));
+app.use(session({
+  secret: process.env.SESSION_SECRET as string || 'secret',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    httpOnly: true,
+  }
+}));
 
 app.use(passport.initialize());
 app.use(passport.session());
