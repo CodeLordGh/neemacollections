@@ -1,6 +1,5 @@
 import express, { Application } from "express";
 import mongoose from "mongoose";
-import session from 'express-session';
 import passport from "./utils/auth.strategy";
 import cors from "cors";
 import * as dotenv from "dotenv";
@@ -35,7 +34,7 @@ app.use(morgan('dev'));
 const db_connect = `mongodb+srv://PerisNeemaCollection:${process.env.DB_PASSWORD}@neema.acaijrr.mongodb.net/?retryWrites=true&w=majority&appName=Neema`
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: "https://neemacollections.vercel.app/",
     methods: ["GET", "POST", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
   },
@@ -47,7 +46,7 @@ setupNotificationHandlers(io);
 app.use(express.json());
 app.use(cors({
   origin: (origin, callback) => {
-    if (origin === "http://localhost:5173") {
+    if (origin === "https://neemacollections.vercel.app/") {
       callback(null, origin);
     } else {
       callback(new Error("Not allowed by CORS"));
@@ -60,16 +59,16 @@ app.use(cors({
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.use(session({
-  secret: process.env.SESSION_SECRET as string || 'secret',
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    secure: process.env.NODE_ENV === 'production',
-    maxAge: 24 * 60 * 60 * 1000, // 24 hours
-    httpOnly: true,
-  }
-}));
+// app.use(session({
+//   secret: process.env.SESSION_SECRET as string || 'secret',
+//   resave: false,
+//   saveUninitialized: false,
+//   cookie: {
+//     secure: process.env.NODE_ENV === 'production',
+//     maxAge: 24 * 60 * 60 * 1000, // 24 hours
+//     httpOnly: true,
+//   }
+// }));
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -134,7 +133,7 @@ app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'em
 app.get('/auth/google/callback', 
   passport.authenticate('google', { failureRedirect: '/login' }),
   (req, res) => {
-    res.redirect('http://localhost:5173');
+    res.redirect('https://neemacollections.vercel.app/');
   }
 );
 

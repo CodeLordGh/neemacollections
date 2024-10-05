@@ -2,7 +2,7 @@ import axios from 'axios';
 import {store} from '../../redux/store'
 
 const api = axios.create({
-  baseURL: 'http://localhost:3002/api',
+  baseURL: 'https://neemacollections.onrender.com/api',
 });
 
 api.interceptors.request.use(

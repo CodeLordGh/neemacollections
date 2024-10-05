@@ -37,7 +37,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const mongoose_1 = __importDefault(require("mongoose"));
-const express_session_1 = __importDefault(require("express-session"));
 const auth_strategy_1 = __importDefault(require("./utils/auth.strategy"));
 const cors_1 = __importDefault(require("cors"));
 const dotenv = __importStar(require("dotenv"));
@@ -65,7 +64,7 @@ app.use((0, morgan_1.default)('dev'));
 const db_connect = `mongodb+srv://PerisNeemaCollection:${process.env.DB_PASSWORD}@neema.acaijrr.mongodb.net/?retryWrites=true&w=majority&appName=Neema`;
 const io = new socket_io_1.Server(server, {
     cors: {
-        origin: "http://localhost:5173",
+        origin: "https://neemacollections.vercel.app/",
         methods: ["GET", "POST", "DELETE"],
         allowedHeaders: ["Content-Type", "Authorization"],
     },
@@ -75,7 +74,7 @@ const io = new socket_io_1.Server(server, {
 app.use(express_1.default.json());
 app.use((0, cors_1.default)({
     origin: (origin, callback) => {
-        if (origin === "http://localhost:5173") {
+        if (origin === "https://neemacollections.vercel.app/") {
             callback(null, origin);
         }
         else {
@@ -88,16 +87,16 @@ app.use((0, cors_1.default)({
 }));
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use((0, cookie_parser_1.default)());
-app.use((0, express_session_1.default)({
-    secret: process.env.SESSION_SECRET || 'secret',
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        secure: process.env.NODE_ENV === 'production',
-        maxAge: 24 * 60 * 60 * 1000, // 24 hours
-        httpOnly: true,
-    }
-}));
+// app.use(session({
+//   secret: process.env.SESSION_SECRET as string || 'secret',
+//   resave: false,
+//   saveUninitialized: false,
+//   cookie: {
+//     secure: process.env.NODE_ENV === 'production',
+//     maxAge: 24 * 60 * 60 * 1000, // 24 hours
+//     httpOnly: true,
+//   }
+// }));
 app.use(auth_strategy_1.default.initialize());
 app.use(auth_strategy_1.default.session());
 // Error handling middleware
@@ -156,7 +155,7 @@ app.post('/api/contact/email', (req, res) => __awaiter(void 0, void 0, void 0, f
 // Google OAuth routes
 app.get('/auth/google', auth_strategy_1.default.authenticate('google', { scope: ['profile', 'email'] }));
 app.get('/auth/google/callback', auth_strategy_1.default.authenticate('google', { failureRedirect: '/login' }), (req, res) => {
-    res.redirect('http://localhost:5173');
+    res.redirect('https://neemacollections.vercel.app/');
 });
 (0, mpesa_route_1.initMpesaRoutes)(app);
 mongoose_1.default.connect(db_connect)
