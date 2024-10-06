@@ -33,7 +33,7 @@ const checkMpesaPaymentStatus = (checkoutRequestId) => __awaiter(void 0, void 0,
     // This might involve making an API call to Mpesa to check the status
     // For now, we'll return a mock status
     const statuses = ["Success", "Failed", "Pending"];
-    return statuses[Math.floor(Math.random() * 3)];
+    return statuses[0];
 });
 const createOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const user = req.user;

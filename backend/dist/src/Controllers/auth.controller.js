@@ -47,7 +47,7 @@ if (process.env.NODE_ENV !== "production") {
 const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // get user input
     const { email, password, username } = req.body;
-    console.log(req.body);
+    // console.log(req.body);
     // check if all fields are filled and passes validation
     if (!email || !password || !username) {
         return res.status(400).json({ message: "Please enter all fields" });
@@ -73,7 +73,8 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
     try {
         // save user in the database
-        yield newUser.save();
+        const _user = yield newUser.save();
+        const user = Object.assign(Object.assign({}, _user), { password: undefined });
         // create token
         const token = jsonwebtoken_1.default.sign({ email }, process.env.ACCESS_TOKEN_SECRET, {
             expiresIn: "1h",
@@ -86,6 +87,7 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             message: `User ${username} registered successfully`,
             isAdmin: newUser.isAdmin,
             token: token,
+            user: user,
         });
     }
     catch (error) {

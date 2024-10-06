@@ -13,7 +13,7 @@ export const register = async (req: any, res: Response) => {
   // get user input
   const { email, password, username } = req.body;
 
-  console.log(req.body);
+  // console.log(req.body);
 
   // check if all fields are filled and passes validation
   if (!email || !password || !username) {
@@ -48,7 +48,8 @@ export const register = async (req: any, res: Response) => {
 
   try {
     // save user in the database
-    await newUser.save();
+    const _user = await newUser.save();
+    const user = {..._user, password: undefined}
 
     // create token
     const token = jwt.sign({ email }, process.env.ACCESS_TOKEN_SECRET!, {
@@ -62,6 +63,7 @@ export const register = async (req: any, res: Response) => {
         message: `User ${username} registered successfully`,
         isAdmin: newUser.isAdmin,
         token: token,
+        user: user,
       });
   } catch (error: any) {
     return res.status(401).json({ message: error.message });
