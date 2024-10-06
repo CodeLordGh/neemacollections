@@ -20,6 +20,7 @@ const Auth = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+const location = useLocation()
 
   useEffect(() => {
     setFormData({ username: '', email: '', password: '' });
@@ -32,7 +33,7 @@ const Auth = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const location = useLocation()
+    
     
     try {
       const response = isLogin 
