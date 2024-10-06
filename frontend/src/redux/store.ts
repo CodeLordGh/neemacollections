@@ -5,9 +5,9 @@ import productsSlice from "./productsSlice";
 import { authReducer, cartReducer, productReducer, searchReducer } from "./slices";
 
 const dataPersistConfig = {
-  key: "data",
+  key: "cart",
   storage,
-  whitelist: ["userCart"],
+  whitelist: ["cart"],
 };
 
 const productPersistConfig = {
@@ -24,12 +24,14 @@ const authPersistConfig = {
 
 const persistedProductReducer = persistReducer(productPersistConfig, productReducer);
 const persistedAuthReducer = persistReducer(authPersistConfig, authReducer);
+const persistedCartReducer = persistReducer(dataPersistConfig, cartReducer);
+
 
 export const store = configureStore({
   reducer: {
     products: productsSlice,
     product: persistedProductReducer,
-    cart: cartReducer,
+    cart: persistedCartReducer,
     search: searchReducer,
     auth: persistedAuthReducer,
   },

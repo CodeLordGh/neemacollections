@@ -5,7 +5,7 @@ import BusinessLogoBlack from "../assets/NeemaCollection-color_black.svg";
 import GoogleLogo from "../assets/google.png";
 import { useDispatch } from 'react-redux';
 import { setCredentials, setUser } from "../redux/slices";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import api from './utils/api';
@@ -32,21 +32,24 @@ const Auth = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    const location = useLocation()
     
     try {
       const response = isLogin 
-        ? await api.post("/auth/login", {...formData})
+        ? await api.post("/auth/login", formData)
         : await api.post("/auth/register", formData);
       
       const { token, user } = response.data;
-      
+  
       dispatch(setCredentials(token));
       dispatch(setUser(user));
       
       toast.success(isLogin ? 'Successfully logged in!' : 'Successfully registered!');
-      localStorage.setItem('token', token)
+      localStorage.setItem('token', token);
+  
+      const redirectTo = location.state?.from || '/';  // Use the stored location or default to '/'
       setTimeout(() => {
-        user.isAdmin ? navigate('/dashboard') :navigate(-1);
+        user.isAdmin ? navigate('/dashboard') : navigate(redirectTo); // Navigate to the previous route or default
       }, 1500);
     } catch (error) {
       toast.error(error.response?.data?.message || 'An error occurred. Please try again.');

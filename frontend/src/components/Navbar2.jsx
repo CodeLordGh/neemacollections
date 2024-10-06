@@ -18,7 +18,6 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation().pathname;
 
-  const token = useSelector((state) => state.auth.token);
   const user = useSelector((state) => state.auth.user);
   const cartItems = useSelector((state) => state.cart.items);
   const searchQuery = useSelector((state) => state.search.query);
@@ -161,7 +160,7 @@ const Navbar = () => {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => navigate("/auth")}
+                onClick={() => navigate('/auth', { state: { from: location } })}
                 className="flex items-center space-x-1 bg-blue-600 px-4 py-2 rounded-full hover:bg-blue-700 transition-colors"
               >
                 <LogIn className="h-5 w-5" />
