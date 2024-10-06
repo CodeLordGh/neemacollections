@@ -22,42 +22,48 @@ const Auth = () => {
   const dispatch = useDispatch();
 const location = useLocation()
 
-  useEffect(() => {
-    setFormData({ username: '', email: '', password: '' });
-  }, [isLogin]);
+useEffect(() => {
+  setFormData({ username: '', email: '', password: '' });
+}, [isLogin]);
 
-  const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+const handleInputChange = (e) => {
+  setFormData({
+    ...formData,
+    [e.target.name]: e.target.value,
+  });
+};
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    
-    
-    try {
-      const response = isLogin 
-        ? await api.post("/auth/login", formData)
-        : await api.post("/auth/register", formData);
-      
-      const { token, user } = response.data;
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
   
-      dispatch(setCredentials(token));
-      dispatch(setUser(user));
-      
-      toast.success(isLogin ? 'Successfully logged in!' : 'Successfully registered!');
-      localStorage.setItem('token', token);
-  
-      const redirectTo = location.state?.from || '/';  // Use the stored location or default to '/'
-      setTimeout(() => {
-        user.isAdmin ? navigate('/dashboard') : navigate(redirectTo); // Navigate to the previous route or default
-      }, 1500);
-    } catch (error) {
-      toast.error(error.response?.data?.message || 'An error occurred. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
+  try {
+    const response = isLogin 
+      ? await api.post("/auth/login", formData)
+      : await api.post("/auth/register", formData);
+    
+    const { token, user } = response.data;
+    
+    dispatch(setCredentials(token));
+    dispatch(setUser(user));
+    
+    toast.success(isLogin ? 'Successfully logged in!' : 'Successfully registered!');
+    localStorage.setItem('token', token);
+
+    const redirectTo = location.state?.from || '/';  // Fallback to '/' if no previous route
+    const timeoutId = setTimeout(() => {
+      user.isAdmin ? navigate('/dashboard') : navigate(redirectTo);
+    }, 1500);
+
+    return () => clearTimeout(timeoutId);  // Prevent memory leaks by clearing timeout on component unmount
+
+  } catch (error) {
+    toast.error(error.response?.data?.message || 'An error occurred. Please try again.');
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const toggleAuthMode = () => {
     setIsLogin(!isLogin);
