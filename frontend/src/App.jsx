@@ -38,6 +38,12 @@ import ProtectedRoute from "./components/protectedRoute";
 import NotificationSoundManager from "./components/utils/notificationSound";
 import AdminProtectedRoute from "./components/adminProtectedRoute";
 
+const LoadingSpinner = () => (
+  <div className="flex justify-center items-center h-screen">
+    <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-light-pink"></div>
+  </div>
+);
+
 const Layout = ({ children }) => {
   const location = useLocation();
   const isAuthPage = location.pathname.startsWith("/auth");
@@ -46,7 +52,7 @@ const Layout = ({ children }) => {
   return (
     <>
       {!isAuthPage && !isDashboardPage && <Navbar />}
-      {children}
+      <Suspense fallback={<LoadingSpinner />}>{children}</Suspense>
       {!isAuthPage && !isDashboardPage && <Footer />}
     </>
   );
@@ -72,37 +78,43 @@ function App() {
               />
               <Route path="/order-success" element={<OrderSuccess />} />
               <Route path="/auth/*" element={<Auth />} />
-              <Route path="/auth/forgot-password" element={<ForgotPassword />} />
-              <Route path="/auth/verify-reset-code" element={<VerifyResetCode />} />
+              <Route
+                path="/auth/forgot-password"
+                element={<ForgotPassword />}
+              />
+              <Route
+                path="/auth/verify-reset-code"
+                element={<VerifyResetCode />}
+              />
               <Route path="/auth/reset-password" element={<ResetPassword />} />
               <Route path="/payment-status" element={<PaymentStatus />} />
-              <Route 
-                path="user/settings" 
+              <Route
+                path="user/settings"
                 element={
                   <ProtectedRoute>
                     <Settings />
                   </ProtectedRoute>
-                } 
+                }
               />
-              <Route 
-                path="user/profile" 
+              <Route
+                path="user/profile"
                 element={
                   <ProtectedRoute>
                     <Profile />
                   </ProtectedRoute>
-                } 
+                }
               />
               <Route path="/order-failed" element={<OrderFailed />} />
-              <Route 
-                path="/user/orders" 
+              <Route
+                path="/user/orders"
                 element={
                   <ProtectedRoute>
                     <Orders />
                   </ProtectedRoute>
-                } 
+                }
               />
               <Route path="/support" element={<ContactSupport />} />
-              
+
               {/* Dashboard routes wrapped with AdminProtectedRoute */}
               <Route
                 path="/dashboard/*"
@@ -122,7 +134,7 @@ function App() {
                 <Route path="customers" element={<CustomersComponent />} />
                 <Route path="settings" element={<SettingsComponent />} />
               </Route>
-              
+
               <Route path="*" element={<Notfound />} />
             </Routes>
           </AnimatePresence>
