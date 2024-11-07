@@ -1,7 +1,9 @@
-
 import axios from 'axios';
 import { Buffer } from 'buffer';
 import moment from 'moment';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const consumerKey = process.env.MPESA_CONSUMER_KEY;
 const consumerSecret = process.env.MPESA_CONSUMER_SECRET;
@@ -47,13 +49,13 @@ export const mpesaStkPush = async (amount: number, access_token: string) => {
       Password: Password,
       Timestamp: timestamp,
       TransactionType: 'CustomerPayBillOnline',
-      Amount: "1",//amount.toString(),
+      Amount: amount.toString(),
       PartyA: '254708374149',
       PartyB: '174379',
       PhoneNumber: '254708374149',
-      CallBackURL: 'https://czc9hkp8-3002.uks1.devtunnels.ms/api/callback',
+      CallBackURL: 'https://example.com/api/callback',
       AccountReference: 'Test',
-      TransactionDesc: 'Test'
+      TransactionDesc: 'Payment for Order'
     }
   };
   try {
