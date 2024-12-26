@@ -3,7 +3,7 @@ import { Strategy as LocalStrategy } from "passport-local";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import passport from "passport";
 import * as bcrypt from "bcrypt"
-import { UserModel as User } from "../Models/user.model";
+import { UserModel as User } from "../Models/user.model.js";
 import * as dotenv from "dotenv";
 import { Request } from "express";
 

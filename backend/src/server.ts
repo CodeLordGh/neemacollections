@@ -1,23 +1,23 @@
 import express, { Application } from "express";
 import mongoose from "mongoose";
-import passport from "./utils/auth.strategy";
+import passport from "./utils/auth.strategy.js";
 import cors from "cors";
 import * as dotenv from "dotenv";
-import orderRouter from "./routes/order.route";
+import orderRouter from "./routes/order.route.js";
 import http from "http";
 import { Server } from "socket.io";
-import router from "./routes/auth.route";
+import router from "./routes/auth.route.js";
 import cookieParser from "cookie-parser";
-import productRoute from "./routes/product.route";
-import cartRoute from "./routes/cart.route";
-import { cleanupImages, imageUpload, upload } from "./utils/imageUpload";
-import { getInsights } from "./utils/insights";
+import productRoute from "./routes/product.route.js";
+import cartRoute from "./routes/cart.route.js";
+import { cleanupImages, imageUpload, upload } from "./utils/imageUpload.js";
+import { getInsights } from "./utils/insights.js";
 import morgan from "morgan"
-import dashboardRoutes from "./routes/stats.route"
-import { initMpesaRoutes } from "./routes/mpesa.route";
-import notificationRoutes from './routes/notification.route';
-import userRoutes from './routes/user.route';
-import { emitNotification, NotificationTypes, setupNotificationHandlers } from "./utils/notification";
+import dashboardRoutes from "./routes/stats.route.js"
+import { initMpesaRoutes } from "./routes/mpesa.route.js";
+import notificationRoutes from './routes/notification.route.js';
+import userRoutes from './routes/user.route.js';
+import { emitNotification, NotificationTypes, setupNotificationHandlers } from "./utils/notification.js";
 import session from "express-session";
 
 
